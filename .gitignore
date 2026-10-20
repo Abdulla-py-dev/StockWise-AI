@@ -1,0 +1,41 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+.env
+.venv*
+
+# Local environment / secrets
+.env
+.env.local
+*.pem
+
+# Streamlit
+.streamlit/
+
+# Local database and generated business data
+database/*.db
+database/*.sqlite
+database/*.sqlite3
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+
+# Generated reports
+reports/*.pdf
+reports/*.csv
+reports/*.xlsx
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
