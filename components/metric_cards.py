@@ -27,8 +27,8 @@ def render_metric_cards(metrics=None, db_path=None) -> None:
             "label": "Products Tracked",
             "value": str(metrics["total_products"]),
             "delta": "\u2014",
-            "delta_kind": "indigo",
-            "accent": "indigo",
+            "delta_kind": "emerald",
+            "accent": "emerald",
             "help": "Total products in the local inventory database.",
         },
         {
@@ -44,8 +44,8 @@ def render_metric_cards(metrics=None, db_path=None) -> None:
             "label": "Total Units in Stock",
             "value": str(metrics["total_units"]),
             "delta": "\u2014",
-            "delta_kind": "teal",
-            "accent": "teal",
+            "delta_kind": "green",
+            "accent": "green",
             "help": "Sum of quantities across all tracked products.",
         },
         {
@@ -64,11 +64,11 @@ def render_metric_cards(metrics=None, db_path=None) -> None:
         with col:
             st.markdown(
                 f"""
-                <div class="metric-card">
+                <div class="metric-card metric-card-{metric['accent']}">
                   <div class="metric-accent {metric['accent']}"></div>
                   <div class="metric-label">{metric["label"]}</div>
                   <div class="metric-value">{metric["value"]}</div>
-                  <div class="metric-delta {metric['delta_kind']}">{metric['delta']}</div>
+                  <div class="metric-delta {metric['delta_kind']}">{metric["delta"]}</div>
                 </div>
                 """,
                 unsafe_allow_html=True,

@@ -6,7 +6,10 @@ import streamlit as st
 def render_sales_forecast_chart() -> None:
     """Render an illustrative Sales vs Forecast line chart."""
     st.subheader("Sales vs Forecast")
-    st.caption("Illustrative data for UI testing only. Not a real prediction.")
+    st.caption(
+        "Illustrative sample data for UI testing only - not live application data "
+        "and not a model prediction."
+    )
 
     months = [
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -22,7 +25,7 @@ def render_sales_forecast_chart() -> None:
             y=actual,
             name="Actual Sales",
             mode="lines+markers",
-            line=dict(color="#203850", width=3),
+            line=dict(color="#172B2A", width=3),
             marker=dict(size=7, symbol="circle"),
         )
     )
@@ -32,7 +35,7 @@ def render_sales_forecast_chart() -> None:
             y=forecast,
             name="Illustrative Forecast",
             mode="lines+markers",
-            line=dict(color="#4361ee", width=3, dash="dash"),
+            line=dict(color="#10B981", width=3, dash="dash"),
             marker=dict(size=7, symbol="diamond"),
         )
     )
@@ -42,7 +45,7 @@ def render_sales_forecast_chart() -> None:
             text="Monthly Sales vs Illustrative Forecast",
             x=0.02,
             xanchor="left",
-            font=dict(size=15, color="#203850", family="Inter, system-ui, -apple-system, sans-serif"),
+            font=dict(size=15, color="#1F2937", family="Inter, system-ui, -apple-system, sans-serif"),
         ),
         xaxis_title="Month",
         yaxis_title="Units Sold",
@@ -51,10 +54,10 @@ def render_sales_forecast_chart() -> None:
         paper_bgcolor="rgba(0,0,0,0)",
         margin=dict(l=60, r=20, t=60, b=50),
         height=360,
-        font=dict(family="Inter, system-ui, -apple-system, sans-serif", color="#203850", size=12),
+        font=dict(family="Inter, system-ui, -apple-system, sans-serif", color="#1F2937", size=12),
     )
-    fig.update_xaxes(showgrid=True, gridcolor="#d9d4c2", linecolor="#c9c2b0", tickformat=",d")
-    fig.update_yaxes(showgrid=True, gridcolor="#d9d4c2", linecolor="#c9c2b0", tickformat=",d")
+    fig.update_xaxes(showgrid=True, gridcolor="#D1E7DB", linecolor="#B5D9C6", tickformat=",d")
+    fig.update_yaxes(showgrid=True, gridcolor="#D1E7DB", linecolor="#B5D9C6", tickformat=",d")
 
     st.plotly_chart(fig, width="stretch", key="sales_forecast_chart")
 
@@ -62,11 +65,14 @@ def render_sales_forecast_chart() -> None:
 def render_expiry_risk_chart() -> None:
     """Render an illustrative Expiry Risk Distribution donut chart."""
     st.subheader("Expiry Risk Distribution")
-    st.caption("Illustrative data for UI testing only. Not a real prediction.")
+    st.caption(
+        "Illustrative sample data for UI testing only - not live application data "
+        "and not a model prediction."
+    )
 
     labels = ["High Risk", "Medium Risk", "Low Risk"]
     values = [12, 38, 200]
-    colors = ["#e63946", "#f4a261", "#2e7d32"]
+    colors = ["#EF4444", "#F59E0B", "#16A34A"]
 
     fig = go.Figure(
         data=[
@@ -86,7 +92,7 @@ def render_expiry_risk_chart() -> None:
             text="Illustrative Product Risk Distribution",
             x=0.02,
             xanchor="left",
-            font=dict(size=15, color="#203850", family="Inter, system-ui, -apple-system, sans-serif"),
+            font=dict(size=15, color="#1F2937", family="Inter, system-ui, -apple-system, sans-serif"),
         ),
         legend=dict(orientation="h", yanchor="bottom", y=-0.12, xanchor="center", x=0.5),
         plot_bgcolor="rgba(0,0,0,0)",
@@ -94,7 +100,7 @@ def render_expiry_risk_chart() -> None:
         margin=dict(l=20, r=20, t=50, b=40),
         height=360,
         showlegend=True,
-        font=dict(family="Inter, system-ui, -apple-system, sans-serif", color="#203850", size=12),
+        font=dict(family="Inter, system-ui, -apple-system, sans-serif", color="#1F2937", size=12),
     )
 
     st.plotly_chart(fig, width="stretch", key="expiry_risk_chart")
@@ -103,7 +109,10 @@ def render_expiry_risk_chart() -> None:
 def render_sample_products_table() -> None:
     """Render the 'Needs Attention' sample products table with search and risk filter."""
     st.subheader("Needs Attention")
-    st.caption("Illustrative sample data for UI testing only. Not real business data.")
+    st.caption(
+        "Illustrative sample data for UI testing only - not live inventory records "
+        "and not real business data."
+    )
 
     products = [
         {"Product": "Milk", "Stock Quantity": 100, "Expiry / Days Remaining": "2 days", "Risk Level": "High", "Suggested Next Step": "Discount and prioritize for immediate sale"},

@@ -1,40 +1,157 @@
+/* ==========================================================================
+   StockWise AI - Emerald & Charcoal theme
+   --------------------------------------------------------------------------
+   All colour, radius, shadow and spacing values resolve from the token
+   block below. Change a token here and the whole application follows.
+   Native Streamlit widget theming is defined in .streamlit/config.toml;
+   this file refines that base and styles the custom HTML components.
+   ========================================================================== */
+
 :root {
-  --navy: #203850;
-  --navy-light: #2d3b5c;
-  --navy-soft: #4a5c7c;
-  --ivory: #E4E1D0;
-  --ivory-soft: #F0ECDD;
-  --card: #FFFFFF;
-  --teal: #2a9d8f;
-  --indigo: #4361ee;
-  --indigo-soft: #6e7eea;
-  --red: #e63946;
-  --red-soft: #f8d7da;
-  --amber: #f4a261;
-  --amber-soft: #fde8c8;
-  --green: #2e7d32;
-  --green-soft: #d9ead3;
-  --gray: #6b7280;
-  --border: #c9c2b0;
-  --border-soft: #d9d4c2;
-  --text-muted: #5b6572;
-  --nav-text: #E4E1D0;
-  --nav-active: #647F98;
-  --nav-hover: #304B65;
+  /* ---- Brand ---- */
+  --charcoal: #172b2a;          /* primary charcoal green */
+  --charcoal-soft: #1f3a38;     /* raised charcoal surfaces */
+  --charcoal-light: #2a4a47;    /* charcoal borders / dividers */
+  --emerald: #10b981;           /* emerald accent */
+  --emerald-hover: #059669;     /* emerald hover */
+  --emerald-deep: #065f46;      /* AA-compliant emerald for text on light */
+  --emerald-tint: #d1fae5;      /* emerald wash */
+  --mint: #e8f5ef;              /* mint page background */
+  --mint-soft: #f1f9f4;         /* subtle mint wash */
+
+  /* ---- Surfaces ---- */
+  --card: #ffffff;
+  --border: #d1e7db;
+  --border-strong: #b5d9c6;
+
+  /* ---- Text ---- */
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;    /* on white: 4.8:1 */
+  --text-muted: #4b5563;        /* on mint: 5.9:1 */
+  --text-on-dark: #e8f5ef;
+  /* Deepest charcoal. Used as the label colour on emerald fills:
+     7.4:1 on --emerald and 5.1:1 on --emerald-hover (both pass WCAG AA). */
+  --text-on-emerald: #071312;
+
+  /* ---- Status ---- */
+  --amber: #f59e0b;
+  --amber-tint: #fef3c7;
+  --amber-text: #92400e;
+  --critical: #ef4444;
+  --critical-tint: #fee2e2;
+  --critical-text: #991b1b;
+  --success: #16a34a;
+  --success-tint: #dcfce7;
+  --success-text: #166534;
+
+  /* ---- Effects ---- */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(23, 43, 42, 0.06);
+  --shadow: 0 2px 8px rgba(23, 43, 42, 0.08);
+  --shadow-lg: 0 8px 24px rgba(23, 43, 42, 0.10);
+  /* Accent-tinted hover shadows for the metric cards. Each one reuses the
+     accent colour of the matching .metric-accent class. The 5px horizontal
+     offset biases the shadow toward the right-hand side of the card. */
+  --shadow-accent-emerald: 5px 10px 24px rgba(16, 185, 129, 0.26);
+  --shadow-accent-red: 5px 10px 24px rgba(239, 68, 68, 0.24);
+  --shadow-accent-green: 5px 10px 24px rgba(22, 163, 74, 0.26);
+  --shadow-accent-amber: 5px 10px 24px rgba(245, 158, 11, 0.26);
+  --focus-ring: 0 0 0 3px rgba(16, 185, 129, 0.35);
+  --font: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
-.stApp {
-  background: var(--ivory);
-  color: var(--navy);
+/* ==========================================================================
+   App shell
+   ========================================================================== */
+
+.stApp,
+.stAppViewContainer,
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"] {
+  background-color: var(--mint);
+  color: var(--text-primary);
+  font-family: var(--font);
 }
 
-/* Sidebar collapse/expand toggle button — always visible */
-button[data-testid="collapsedControl"],
-button[data-testid="stSidebarCollapseButton"] {
-  background: var(--navy) !important;
-  border: 1px solid var(--navy-light) !important;
-  color: #FFFFFF !important;
-  border-radius: 6px !important;
+[data-testid="stMainBlockContainer"] {
+  padding: 2rem 2.5rem 3rem;
+  max-width: 1400px;
+}
+
+/* Headings ---------------------------------------------------------------- */
+
+.stApp h1,
+.stApp h2,
+.stApp h3,
+.stApp h4,
+.stApp h5,
+.stApp h6,
+[data-testid="stHeading"] {
+  color: var(--text-primary) !important;
+  font-family: var(--font);
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.stApp h1 { font-size: 2rem; font-weight: 800; }
+.stApp h2 { font-size: 1.35rem; }
+.stApp h3 { font-size: 1.1rem; }
+
+[data-testid="stCaptionContainer"],
+.stApp small,
+.stApp caption {
+  color: var(--text-muted) !important;
+}
+
+hr, [data-testid="stDivider"] {
+  border-color: var(--border) !important;
+}
+
+/* Hide default Streamlit chrome for a cleaner app shell */
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+header[data-testid="stHeader"] { background: transparent; }
+
+/* Scrollbars -------------------------------------------------------------- */
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+  border: 2px solid var(--mint);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--charcoal-light); }
+
+/* ==========================================================================
+   Sidebar - charcoal green
+   ========================================================================== */
+
+[data-testid="stSidebar"] {
+  background: var(--charcoal);
+  border-right: 1px solid var(--charcoal-light);
+  width: 264px;
+  min-height: 100vh;
+  display: block;
+  visibility: visible;
+  flex-shrink: 0;
+}
+
+/* Reduce default top padding above the first sidebar block */
+[data-testid="stSidebar"] > div:first-child > div {
+  padding-top: 0.75rem;
+}
+
+/* Sidebar collapse/expand toggle button.
+   Streamlit renders it as button[data-testid="stBaseButton-headerNoPadding"]
+   holding a Material icon glyph in span[data-testid="stIconMaterial"]. */
+section[data-testid="stSidebar"] button[data-testid="stBaseButton-headerNoPadding"] {
+  background: var(--emerald) !important;
+  border: 1px solid var(--emerald) !important;
+  color: var(--text-on-emerald) !important;
+  border-radius: 8px !important;
   width: 32px !important;
   height: 32px !important;
   display: flex !important;
@@ -42,203 +159,147 @@ button[data-testid="stSidebarCollapseButton"] {
   justify-content: center !important;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
-button[data-testid="collapsedControl"]:hover,
-button[data-testid="stSidebarCollapseButton"]:hover {
-  background: var(--navy-soft) !important;
-  border-color: var(--navy-light) !important;
+section[data-testid="stSidebar"] button[data-testid="stBaseButton-headerNoPadding"]:hover {
+  background: var(--emerald-hover) !important;
+  border-color: var(--emerald-hover) !important;
+}
+section[data-testid="stSidebar"] button[data-testid="stBaseButton-headerNoPadding"] span[data-testid="stIconMaterial"] {
+  color: var(--text-on-emerald) !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
 }
 
-/* Ensure the arrow icon inside the toggle is white */
-button[data-testid="collapsedControl"] svg,
-button[data-testid="stSidebarCollapseButton"] svg {
-  fill: #FFFFFF !important;
-  color: #FFFFFF !important;
-  width: 18px !important;
-  height: 18px !important;
-}
+/* ---- Brand block ---- */
 
-/* Dashboard headings — dark navy for readability on ivory background */
-.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
-  color: var(--navy) !important;
-}
-
-/* Hide default Streamlit chrome for a cleaner app shell */
-#MainMenu { visibility: hidden; }
-footer { visibility: hidden; }
-
-/* ---------- Sidebar ---------- */
-[data-testid="stSidebar"] {
-  background: var(--navy);
-  border-right: 1px solid var(--navy-soft);
-  width: 260px;
-  min-height: 100vh;
-  display: block;
-  visibility: visible;
-  flex-shrink: 0;
-}
-
-/* Reduce default top padding above the first sidebar block so branding sits near the top */
-[data-testid="stSidebar"] > div:first-child > div {
-  padding-top: 0.5rem;
-}
-
-/* ---------- Brand block ---------- */
 .brand {
-  padding: 16px 16px 12px 16px;
+  padding: 16px 16px 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: 0;
 }
 .brand-mark {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 .brand-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--teal), var(--indigo));
-  color: #ffffff;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-hover));
+  color: var(--text-on-emerald);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   font-size: 20px;
-  box-shadow: 0 2px 6px rgba(33, 101, 135, 0.35);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.28);
 }
 .brand-name {
   font-weight: 800;
-  font-size: 20px;
+  font-size: 19px;
   color: #ffffff;
   letter-spacing: -0.4px;
 }
 .brand-tagline {
   font-size: 11.5px;
-  color: var(--ivory);
-  margin-top: 1px;
+  color: var(--text-on-dark);
+  opacity: 0.75;
+  margin-top: 2px;
 }
 
-/* ---------- Navigation ---------- */
+/* ---- Navigation ---- */
+
 .nav-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.15);
-  margin: 10px 16px;
+  background: rgba(232, 245, 239, 0.14);
+  margin: 8px 16px;
   border: none;
 }
 .nav-section-label {
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.9px;
   text-transform: uppercase;
-  color: #F5F7FA;
-  margin: 14px 16px 8px 16px;
+  color: var(--text-on-dark);
+  opacity: 0.6;
+  margin: 16px 16px 8px 16px;
 }
 
-/* ---------- Sidebar navigation buttons (replaces st.radio) ---------- */
 [data-testid="stSidebar"] div[data-testid="stButton"] {
   margin: 2px 8px;
 }
 [data-testid="stSidebar"] div[data-testid="stButton"] > button {
   align-items: center;
-  border-radius: 12px;
-  padding: 14px 16px;
+  border-radius: 10px;
+  padding: 11px 14px;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
   font-weight: 600;
-  color: var(--nav-text);
+  color: var(--text-on-dark);
   font-size: 14px;
   border: 1px solid transparent;
-  background: transparent;
+  background-color: var(--charcoal);
   display: flex;
   justify-content: flex-start;
   gap: 10px;
   width: 100%;
 }
+/* Hover lifts an item onto the lighter charcoal green. Kept before the
+   [kind="primary"] rules so the active page can re-pin itself below;
+   both selectors have the same specificity, so source order decides. */
 [data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {
-  background: var(--nav-hover);
-  color: #ffffff;
+  background-color: var(--charcoal-light);
+  border-color: var(--charcoal-light);
+  color: var(--text-on-dark);
 }
+[data-testid="stSidebar"] div[data-testid="stButton"] > button:focus-visible {
+  outline: 2px solid var(--emerald);
+  outline-offset: 2px;
+}
+/* The active page stays emerald, including while hovered. */
 [data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="primary"] {
-  background: var(--nav-active);
-  border-radius: 10px;
-  border-left: 3px solid var(--ivory);
-  border-right: 1px solid transparent;
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  color: #ffffff;
+  background-color: var(--emerald);
+  border-color: var(--emerald);
+  color: var(--text-on-emerald);
+  font-weight: 700;
 }
 [data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="primary"]:hover {
-  background: var(--nav-active);
-  color: #ffffff;
+  background-color: var(--emerald);
+  border-color: var(--emerald);
+  color: var(--text-on-emerald);
 }
 
-/* Remove default Streamlit button styling that conflicts */
-[data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="secondary"] {
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--nav-text);
-}
+/* ==========================================================================
+   Top bar
+   ========================================================================== */
 
-/* ---------- Metric cards ---------- */
-.metric-card {
+/* Targets the keyed container created in app.py (st.container(key="top_bar")),
+   which Streamlit exposes as the "st-key-top_bar" CSS class. */
+.st-key-top_bar {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px 16px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-  height: 100%;
-  position: relative;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
 }
-.metric-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-.metric-accent {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  border-radius: 14px 14px 0 0;
-}
-.metric-accent.indigo { background: var(--indigo); }
-.metric-accent.red { background: var(--red); }
-.metric-accent.teal { background: var(--teal); }
-.metric-accent.amber { background: var(--amber); }
-.metric-label {
-  font-size: 11px;
-  font-weight: 700;
+.top-bar-hint {
+  font-size: 12px;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
+  text-align: right;
 }
-.metric-value {
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--navy);
-  margin-bottom: 4px;
-  line-height: 1.15;
-}
-.metric-delta {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--green);
-}
-.metric-delta.indigo { color: var(--indigo); }
-.metric-delta.red { color: var(--red); }
-.metric-delta.amber { color: var(--amber); }
-.metric-delta.teal { color: var(--teal); }
 
-/* ---------- Section headings ---------- */
+/* ==========================================================================
+   Section headings
+   ========================================================================== */
+
 .section-title {
   font-size: 20px;
   font-weight: 800;
-  color: var(--navy);
-  margin: 24px 0 4px 0;
+  color: var(--text-primary);
+  margin: 28px 0 4px 0;
   letter-spacing: -0.3px;
 }
 .section-subtitle {
@@ -247,64 +308,437 @@ footer { visibility: hidden; }
   margin-bottom: 16px;
 }
 
-/* ---------- Disclosure banner ---------- */
+/* ==========================================================================
+   Metric cards
+   ========================================================================== */
+
+.metric-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px 18px;
+  box-shadow: var(--shadow-sm);
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.metric-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+  border-color: var(--border-strong);
+}
+/* Each card lifts with a shadow tinted by its own accent colour. The
+   per-accent class is applied in components/metric_cards.py, so only the
+   four dashboard metric cards are affected. */
+.metric-card.metric-card-emerald:hover { box-shadow: var(--shadow-accent-emerald); }
+.metric-card.metric-card-red:hover { box-shadow: var(--shadow-accent-red); }
+.metric-card.metric-card-green:hover { box-shadow: var(--shadow-accent-green); }
+.metric-card.metric-card-amber:hover { box-shadow: var(--shadow-accent-amber); }
+/* The card lift is decorative motion, so it is dropped when the user asks
+   for reduced motion. The shadow change is kept. */
+@media (prefers-reduced-motion: reduce) {
+  .metric-card { transition: none; }
+  .metric-card:hover { transform: none; }
+}
+.metric-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.metric-accent.emerald { background: var(--emerald); }
+.metric-accent.red { background: var(--critical); }
+.metric-accent.green { background: var(--success); }
+.metric-accent.amber { background: var(--amber); }
+.metric-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 10px;
+}
+.metric-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+}
+.metric-delta {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+.metric-delta.emerald { color: var(--emerald-deep); }
+.metric-delta.red { color: var(--critical-text); }
+.metric-delta.green { color: var(--success-text); }
+.metric-delta.amber { color: var(--amber-text); }
+
+/* ==========================================================================
+   Disclosure banner
+   ========================================================================== */
+
 .disclosure {
-  background: var(--amber-soft);
+  background: var(--amber-tint);
   border: 1px solid var(--amber);
   border-left: 4px solid var(--amber);
-  border-radius: 8px;
-  padding: 12px 16px;
+  border-radius: var(--radius);
+  padding: 14px 18px;
   font-size: 12.5px;
-  color: #5a441b;
-  margin-bottom: 20px;
+  color: var(--amber-text);
+  margin-bottom: 22px;
 }
-.disclosure b { color: #7a5c12; }
+.disclosure b { color: #78350f; }
 
-/* ---------- Risk badges ---------- */
+/* ==========================================================================
+   Status badges
+   Meaning is unchanged: red = high risk / expired, amber = medium risk,
+   green = low risk. Only the palette is new.
+   ========================================================================== */
+
 .risk-badge {
   display: inline-block;
-  padding: 2px 10px;
+  padding: 3px 11px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 800;
-  color: #ffffff;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
 }
-.risk-high { background: var(--red); }
-.risk-medium { background: var(--amber); color: #4a3724; }
-.risk-low { background: var(--green); }
+.risk-high {
+  background: var(--critical-tint);
+  color: var(--critical-text);
+  border: 1px solid var(--critical);
+}
+.risk-medium {
+  background: var(--amber-tint);
+  color: var(--amber-text);
+  border: 1px solid var(--amber);
+}
+.risk-low {
+  background: var(--success-tint);
+  color: var(--success-text);
+  border: 1px solid var(--success);
+}
 
-/* ---------- Needs attention table ---------- */
+/* ==========================================================================
+   Needs attention table
+   ========================================================================== */
+
 table.attention {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
   overflow: hidden;
   font-size: 13px;
   margin-top: 4px;
+  box-shadow: var(--shadow-sm);
 }
 table.attention th {
-  background: var(--navy);
-  color: #ffffff;
+  background: var(--charcoal);
+  color: var(--text-on-dark);
   text-align: left;
-  padding: 10px 12px;
-  font-size: 11.5px;
+  padding: 12px 14px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
 }
 table.attention td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border-soft);
-  color: var(--navy);
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
 }
 table.attention tr:last-child td { border-bottom: none; }
-table.attention tr:hover td { background: var(--ivory-soft); }
+table.attention tr:hover td { background: var(--mint-soft); }
 
-/* ---------- Filter controls ---------- */
+/* ==========================================================================
+   Empty states
+   ========================================================================== */
+
+.empty-state {
+  background: var(--card);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 48px 32px;
+  text-align: center;
+  max-width: 620px;
+  margin: 8px auto 0 auto;
+  box-shadow: var(--shadow-lg);
+}
+.empty-state-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 18px auto;
+  border-radius: 50%;
+  background: var(--emerald-tint);
+  color: var(--emerald-deep);
+  font-size: 26px;
+  line-height: 56px;
+}
+.empty-state-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+.empty-state-text {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+.empty-state-note {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--emerald-deep);
+  background: var(--emerald-tint);
+  border: 1px solid var(--emerald);
+  border-radius: 999px;
+  padding: 5px 14px;
+}
+
+/* ==========================================================================
+   Native widgets - buttons
+   ========================================================================== */
+
+div.stButton > button,
+div[data-testid="stFormSubmitButton"] > button,
+form button[kind="primary"],
+form button[kind="secondary"] {
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 13.5px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-primary);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+div.stButton > button:hover,
+div[data-testid="stFormSubmitButton"] > button:hover {
+  border-color: var(--emerald);
+  color: var(--emerald-deep);
+  background: var(--emerald-tint);
+}
+div.stButton > button[kind="primary"],
+div[data-testid="stFormSubmitButton"] > button[kind="primary"],
+form button[kind="primary"] {
+  background: var(--emerald);
+  border-color: var(--emerald);
+  color: var(--text-on-emerald);
+  font-weight: 700;
+}
+div.stButton > button[kind="primary"]:hover,
+div[data-testid="stFormSubmitButton"] > button[kind="primary"]:hover,
+form button[kind="primary"]:hover {
+  background: var(--emerald-hover);
+  border-color: var(--emerald-hover);
+  color: var(--text-on-emerald);
+}
+div.stButton > button:disabled,
+div[data-testid="stFormSubmitButton"] > button:disabled {
+  background: var(--mint-soft);
+  border-color: var(--border);
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+
+/* ==========================================================================
+   Native widgets - inputs, selects, text areas
+   ========================================================================== */
+
+[data-testid="stTextInput"] input,
+[data-testid="stNumberInput"] input,
+[data-testid="stDateInput"] input,
+[data-testid="stTextArea"] textarea {
+  color: var(--text-primary) !important;
+  background-color: var(--card) !important;
+  font-family: var(--font) !important;
+  font-size: 13.5px;
+}
+[data-testid="stTextInput"] input::placeholder,
+[data-testid="stNumberInput"] input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+/* Input shells. Text and number inputs use react-aria (stTextInputRootElement /
+   stNumberInputContainer); date, text area and selectbox still use baseweb. */
+[data-testid="stTextInput"] div[data-testid="stTextInputRootElement"],
+[data-testid="stNumberInput"] div[data-testid="stNumberInputContainer"],
+[data-testid="stTextInput"] div[data-baseweb="input"] > div,
+[data-testid="stNumberInput"] div[data-baseweb="input"] > div,
+[data-testid="stDateInput"] div[data-baseweb="input"] > div,
+[data-testid="stTextArea"] div[data-baseweb="textarea"] > div,
+[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+  background-color: var(--card);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+[data-testid="stTextInput"] div[data-testid="stTextInputRootElement"]:focus-within,
+[data-testid="stNumberInput"] div[data-testid="stNumberInputContainer"]:focus-within,
+[data-testid="stTextInput"] div[data-baseweb="input"]:focus-within > div,
+[data-testid="stNumberInput"] div[data-baseweb="input"]:focus-within > div,
+[data-testid="stDateInput"] div[data-baseweb="input"]:focus-within > div,
+[data-testid="stTextArea"] div[data-baseweb="textarea"]:focus-within > div,
+[data-testid="stSelectbox"] div[data-baseweb="select"]:focus-within > div {
+  border-color: var(--emerald);
+  box-shadow: var(--focus-ring);
+}
+[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+  color: var(--text-primary);
+  font-size: 13.5px;
+}
+/* Dropdown option list */
+div[data-baseweb="popover"] li {
+  color: var(--text-primary);
+  font-size: 13.5px;
+}
+div[data-baseweb="popover"] li:hover {
+  background: var(--emerald-tint);
+}
+
+/* Checkboxes and radios */
+[data-testid="stCheckbox"] input[type="checkbox"],
+[data-testid="stRadio"] input[type="radio"] {
+  accent-color: var(--emerald);
+}
+
+/* File uploader. The dropzone is a <section>, not a <div>. */
+section[data-testid="stFileUploaderDropzone"],
+div[data-testid="stFileUploaderDropzoneInstructions"] {
+  background: var(--mint-soft);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+}
+section[data-testid="stFileUploaderDropzone"]:hover {
+  border-color: var(--emerald);
+  background: var(--emerald-tint);
+}
+
+/* ==========================================================================
+   Native widgets - tabs, alerts, expanders, dataframes
+   ========================================================================== */
+
+/* Streamlit renders tabs as react-aria elements:
+   div[data-testid="stTab"] > div[data-testid="stMarkdownContainer"] > p
+   The label colour must be set on the stTab node so the inner <p> inherits
+   it, otherwise the theme primary (emerald) wins and the active label sits
+   at 2.3:1 on the mint canvas. */
+[data-testid="stTabs"] [data-testid="stTab"] {
+  color: var(--text-muted);
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+[data-testid="stTabs"] [data-testid="stTab"] p { color: inherit; }
+[data-testid="stTabs"] [data-testid="stTab"]:hover { color: var(--emerald-deep); }
+[data-testid="stTabs"] [data-testid="stTab"][aria-selected="true"] {
+  color: var(--emerald-deep);
+  font-weight: 700;
+}
+[data-testid="stTabs"] [data-testid="stTab"] .react-aria-SelectionIndicator {
+  background: var(--emerald-hover);
+  border-radius: 2px;
+}
+[data-testid="stTabs"] [data-testid="stTabPanel"] { padding-top: 0.5rem; }
+
+/* Alerts.
+   Streamlit paints the visible surface on div[data-testid="stAlertContainer"];
+   the outer [data-testid="stAlert"] element is a transparent wrapper, so the
+   border has to be applied to the container. Streamlit already assigns each
+   type its theme background and text colour (.streamlit/config.toml) and
+   leaves the matching status colour on the container's border-colour, so
+   restoring the border width gives every alert a defined edge. The saturated
+   palette colour on the left edge keeps the four status types
+   distinguishable at a glance. */
+[data-testid="stAlert"] {
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font-size: 13.5px;
+}
+[data-testid="stAlert"] p { color: inherit; }
+[data-testid="stAlertContainer"] {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+}
+[data-testid="stAlertContainer"]:has([data-testid="stAlertContentInfo"]) {
+  border-left: 4px solid var(--emerald);
+}
+[data-testid="stAlertContainer"]:has([data-testid="stAlertContentSuccess"]) {
+  border-left: 4px solid var(--success);
+}
+[data-testid="stAlertContainer"]:has([data-testid="stAlertContentWarning"]) {
+  border-left: 4px solid var(--amber);
+}
+[data-testid="stAlertContainer"]:has([data-testid="stAlertContentError"]) {
+  border-left: 4px solid var(--critical);
+}
+
+[data-testid="stExpander"] {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+}
+[data-testid="stExpander"] summary:hover { color: var(--emerald-deep); }
+
+[data-testid="stDataFrame"],
+.stDataFrame {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-testid="stTooltip"] {
+  background: var(--charcoal);
+  color: var(--text-on-dark);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+
+pre, code {
+  background-color: var(--mint-soft) !important;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Focus states - keyboard accessibility
+   ========================================================================== */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--emerald);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ==========================================================================
+   Filter row helper
+   ========================================================================== */
+
 .filter-row {
   display: flex;
   gap: 10px;
@@ -313,109 +747,24 @@ table.attention tr:hover td { background: var(--ivory-soft); }
   flex-wrap: wrap;
 }
 
-/* ---------- Generic tweaks ---------- */
-.stDataFrame, [data-testid="stDataFrame"] { border-radius: 10px; }
-div.stButton > button {
-  border-radius: 8px;
-  font-weight: 600;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--navy);
-  transition: all 0.15s ease;
-}
-div.stButton > button:hover {
-  border-color: var(--indigo);
-  color: var(--indigo);
-}
-div.stButton > button[kind="primary"] {
-  background: var(--navy);
-  border-color: var(--navy);
-  color: #ffffff;
-}
-div.stButton > button[kind="primary"]:hover {
-  background: var(--navy-light);
-  border-color: var(--navy-light);
-}
-.stSelectbox > div > div, .stTextInput > div > div, .stNumberInput > div > div {
-  border-radius: 8px;
-  border: 1px solid var(--border);
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  [data-testid="stMainBlockContainer"] { padding: 1.25rem 1rem 2rem; }
+  .metric-value { font-size: 26px; }
+  .section-title { font-size: 17px; }
+  .st-key-top_bar { padding: 12px; }
+  .top-bar-hint { text-align: left; }
+  table.attention th,
+  table.attention td { padding: 9px 10px; font-size: 12px; }
+  .empty-state { padding: 32px 20px; }
 }
 
-/* ---------- Top Bar ---------- */
-/* Targets the keyed container created in app.py (st.container(key="top_bar")),
-   which Streamlit exposes as the "st-key-top_bar" CSS class. */
-.st-key-top_bar {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+@media (max-width: 600px) {
+  .stApp h1 { font-size: 1.55rem; }
+  .metric-value { font-size: 22px; }
+  .metric-card { padding: 18px 14px; }
+  .empty-state { padding: 28px 16px; }
 }
-.top-bar-hint {
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: right;
-}
-
-/* ---------- User Profile (sidebar bottom) ---------- */
-.profile-divider {
-  height: 1px;
-  background: var(--navy-soft);
-  margin: 24px 16px 12px 16px;
-  border: none;
-  opacity: 0.3;
-}
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  background: var(--navy-light);
-  border-radius: 10px;
-  margin: 0 12px 16px 12px;
-}
-.profile-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--navy-soft);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-}
-.profile-info {
-  flex: 1;
-}
-.profile-name {
-  font-weight: 700;
-  font-size: 13.5px;
-  color: #ffffff;
-}
-.profile-role {
-  font-size: 11px;
-  color: var(--ivory);
-  opacity: 0.8;
-}
-.profile-logout {
-  background: transparent;
-  border: none;
-  color: #ffffff;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
-  transition: background 0.15s ease;
-}
-.profile-logout:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* ---------- Search input styling ---------- */
-div.stTextInput > div > div > input {
-  font-size: 13px;
-}
-

@@ -1,0 +1,51 @@
+# StockWise AI - Streamlit theme configuration
+#
+# The native Streamlit theme is set here so that built-in widgets (buttons,
+# inputs, select boxes, tabs, alerts, dataframes) are rendered in the
+# Emerald & Charcoal palette. Custom styling in assets/styles.css builds on
+# top of these values and uses the same colour tokens.
+#
+# Secrets are NOT stored here. credentials.toml / secrets.toml stay ignored.
+
+[theme]
+base = "light"
+primaryColor = "#10B981"
+backgroundColor = "#E8F5EF"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1F2937"
+redColor = "#EF4444"
+orangeColor = "#F59E0B"
+yellowColor = "#F59E0B"
+blueColor = "#10B981"
+greenColor = "#16A34A"
+violetColor = "#059669"
+grayColor = "#6B7280"
+redBackgroundColor = "#FEE2E2"
+orangeBackgroundColor = "#FEF3C7"
+yellowBackgroundColor = "#FEF3C7"
+blueBackgroundColor = "#D1FAE5"
+greenBackgroundColor = "#DCFCE7"
+violetBackgroundColor = "#D1FAE5"
+grayBackgroundColor = "#F3F4F6"
+redTextColor = "#991B1B"
+orangeTextColor = "#92400E"
+yellowTextColor = "#92400E"
+blueTextColor = "#065F46"
+greenTextColor = "#166534"
+violetTextColor = "#065F46"
+grayTextColor = "#4B5563"
+borderColor = "#D1E7DB"
+baseRadius = "0.75rem"
+showWidgetBorder = true
+linkColor = "#059669"
+codeBackgroundColor = "#F1F9F4"
+
+[theme.sidebar]
+backgroundColor = "#172B2A"
+secondaryBackgroundColor = "#1F3A38"
+textColor = "#E8F5EF"
+primaryColor = "#10B981"
+redColor = "#EF4444"
+orangeColor = "#F59E0B"
+greenColor = "#16A34A"
+grayColor = "#9CB5B0"

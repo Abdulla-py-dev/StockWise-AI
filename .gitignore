@@ -14,8 +14,9 @@ venv/
 .env.local
 *.pem
 
-# Streamlit
-.streamlit/
+# Streamlit (keep the shared theme config, ignore local secrets)
+.streamlit/*
+!.streamlit/config.toml
 
 # Local database and generated business data
 database/*.db

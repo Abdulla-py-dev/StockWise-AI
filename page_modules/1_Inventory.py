@@ -216,10 +216,10 @@ def render_view_products() -> None:
 
     def _status_color(val):
         colors = {
-            "Expired": "color: #e63946; font-weight: 700;",
-            "High Risk": "color: #e63946; font-weight: 700;",
-            "Medium Risk": "color: #f4a261; font-weight: 700;",
-            "Low Risk": "color: #2e7d32; font-weight: 700;",
+            "Expired": "color: #EF4444; font-weight: 700;",
+            "High Risk": "color: #EF4444; font-weight: 700;",
+            "Medium Risk": "color: #F59E0B; font-weight: 700;",
+            "Low Risk": "color: #16A34A; font-weight: 700;",
         }
         return colors.get(val, "")
 

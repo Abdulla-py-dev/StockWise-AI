@@ -1,3 +1,5 @@
+from html import escape
+
 import streamlit as st
 
 NAV_ITEMS = [
@@ -9,6 +11,18 @@ NAV_ITEMS = [
     ("\U0001F4C4 Reports", "reports"),
     ("\U00002699 Settings", "settings"),
 ]
+
+
+def _select_page(page_key: str) -> None:
+    """Set the active page. Registered as the navigation buttons' on_click callback.
+
+    A callback runs before the script re-executes, so on the render that
+    follows a click the active navigation item is already correct and every
+    navigation button is rendered. Setting the state inline after the button
+    returned True would instead leave the previous item highlighted and skip
+    the remaining buttons for that run.
+    """
+    st.session_state.selected_page = page_key
 
 
 def render_sidebar() -> str:
@@ -37,38 +51,28 @@ def render_sidebar() -> str:
 
         selected = st.session_state.selected_page
         for label, key in NAV_ITEMS:
-            is_active = key == selected
-            if st.button(
+            st.button(
                 label,
                 key=f"nav_{key}",
                 width="stretch",
-                type="primary" if is_active else "secondary",
-            ):
-                st.session_state.selected_page = key
-                return key
+                type="primary" if key == selected else "secondary",
+                on_click=_select_page,
+                args=(key,),
+            )
 
-        st.markdown('<hr class="profile-divider">', unsafe_allow_html=True)
-        st.markdown(
-            """
-            <div class="user-profile">
-              <div class="profile-avatar">U</div>
-              <div class="profile-info">
-                <div class="profile-name">Store Manager</div>
-                <div class="profile-role">Inventory Administrator</div>
-              </div>
-              <button class="profile-logout" title="Logout">
-                <span class="logout-icon">&#x274C;</span>
-              </button>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        return selected
+    return st.session_state.selected_page
 
 
 def render_page_placeholder(page_title: str, detail: str) -> None:
-    """Render a minimal placeholder for pages reserved for later phases."""
-    st.title(page_title)
-    st.info(detail)
-    st.caption("This page is reserved for a later phase of StockWise AI.")
+    """Render a themed empty state for pages reserved for later phases."""
+    st.markdown(
+        f"""
+        <div class="empty-state">
+          <div class="empty-state-icon">&#9683;</div>
+          <h2 class="empty-state-title">{escape(page_title)}</h2>
+          <div class="empty-state-text">{escape(detail)}</div>
+          <div class="empty-state-note">Reserved for a later phase</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
