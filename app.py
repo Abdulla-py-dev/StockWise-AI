@@ -86,7 +86,6 @@ def render_overview() -> None:
         '<div class="section-subtitle">Illustrative historical sales and forecast values.</div>',
         unsafe_allow_html=True,
     )
-    render_sales_forecast_chart()
 
     chart_col1, chart_col2 = st.columns(2, gap="medium")
     with chart_col1:

@@ -50,7 +50,7 @@ def render_sales_forecast_chart() -> None:
     fig.update_xaxes(showgrid=True, gridcolor="#efeae0", linecolor="#e3e0d8")
     fig.update_yaxes(showgrid=True, gridcolor="#efeae0", linecolor="#e3e0d8", tickformat=",d")
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key="sales_forecast_chart")
 
 
 def render_expiry_risk_chart() -> None:
@@ -90,7 +90,7 @@ def render_expiry_risk_chart() -> None:
         showlegend=True,
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key="expiry_risk_chart")
 
 
 def render_sample_products_table() -> None:
