@@ -1,8 +1,10 @@
 :root {
-  --bg: #f4f1ea;
-  --card: #ffffff;
-  --navy: #1f2a44;
+  --navy: #203850;
   --navy-light: #2d3b5c;
+  --navy-soft: #4a5c7c;
+  --ivory: #E4E1D0;
+  --ivory-soft: #F0ECDD;
+  --card: #FFFFFF;
   --teal: #2a9d8f;
   --indigo: #4361ee;
   --indigo-soft: #6e7eea;
@@ -13,31 +15,80 @@
   --green: #2e7d32;
   --green-soft: #d9ead3;
   --gray: #6b7280;
-  --border: #e3e0d8;
-  --border-soft: #efeae0;
+  --border: #c9c2b0;
+  --border-soft: #d9d4c2;
   --text-muted: #5b6572;
+  --nav-text: #E4E1D0;
+  --nav-active: #647F98;
+  --nav-hover: #304B65;
 }
 
 .stApp {
-  background: var(--bg);
+  background: var(--ivory);
+  color: var(--navy);
 }
 
-[data-testid="stSidebar"] {
-  background: var(--card);
-  border-right: 1px solid var(--border);
+/* Sidebar collapse/expand toggle button — always visible */
+button[data-testid="collapsedControl"],
+button[data-testid="stSidebarCollapseButton"] {
+  background: var(--navy) !important;
+  border: 1px solid var(--navy-light) !important;
+  color: #FFFFFF !important;
+  border-radius: 6px !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+button[data-testid="collapsedControl"]:hover,
+button[data-testid="stSidebarCollapseButton"]:hover {
+  background: var(--navy-soft) !important;
+  border-color: var(--navy-light) !important;
+}
+
+/* Ensure the arrow icon inside the toggle is white */
+button[data-testid="collapsedControl"] svg,
+button[data-testid="stSidebarCollapseButton"] svg {
+  fill: #FFFFFF !important;
+  color: #FFFFFF !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Dashboard headings — dark navy for readability on ivory background */
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {
+  color: var(--navy) !important;
 }
 
 /* Hide default Streamlit chrome for a cleaner app shell */
-header[data-testid="stHeader"] { display: none; }
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
 
+/* ---------- Sidebar ---------- */
+[data-testid="stSidebar"] {
+  background: var(--navy);
+  border-right: 1px solid var(--navy-soft);
+  width: 260px;
+  min-height: 100vh;
+  display: block;
+  visibility: visible;
+  flex-shrink: 0;
+}
+
+/* Reduce default top padding above the first sidebar block so branding sits near the top */
+[data-testid="stSidebar"] > div:first-child > div {
+  padding-top: 0.5rem;
+}
+
 /* ---------- Brand block ---------- */
 .brand {
-  padding: 16px 12px 10px 12px;
+  padding: 16px 16px 12px 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 0;
 }
 .brand-mark {
   display: inline-flex;
@@ -60,20 +111,20 @@ footer { visibility: hidden; }
 .brand-name {
   font-weight: 800;
   font-size: 20px;
-  color: var(--navy);
+  color: #ffffff;
   letter-spacing: -0.4px;
 }
 .brand-tagline {
   font-size: 11.5px;
-  color: var(--text-muted);
+  color: var(--ivory);
   margin-top: 1px;
 }
 
 /* ---------- Navigation ---------- */
 .nav-divider {
   height: 1px;
-  background: var(--border-soft);
-  margin: 10px 12px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 10px 16px;
   border: none;
 }
 .nav-section-label {
@@ -81,8 +132,53 @@ footer { visibility: hidden; }
   font-weight: 700;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin: 14px 12px 6px 12px;
+  color: #F5F7FA;
+  margin: 14px 16px 8px 16px;
+}
+
+/* ---------- Sidebar navigation buttons (replaces st.radio) ---------- */
+[data-testid="stSidebar"] div[data-testid="stButton"] {
+  margin: 2px 8px;
+}
+[data-testid="stSidebar"] div[data-testid="stButton"] > button {
+  align-items: center;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-weight: 600;
+  color: var(--nav-text);
+  font-size: 14px;
+  border: 1px solid transparent;
+  background: transparent;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+[data-testid="stSidebar"] div[data-testid="stButton"] > button:hover {
+  background: var(--nav-hover);
+  color: #ffffff;
+}
+[data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="primary"] {
+  background: var(--nav-active);
+  border-radius: 10px;
+  border-left: 3px solid var(--ivory);
+  border-right: 1px solid transparent;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  color: #ffffff;
+}
+[data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="primary"]:hover {
+  background: var(--nav-active);
+  color: #ffffff;
+}
+
+/* Remove default Streamlit button styling that conflicts */
+[data-testid="stSidebar"] div[data-testid="stButton"] > button[kind="secondary"] {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--nav-text);
 }
 
 /* ---------- Metric cards ---------- */
@@ -90,20 +186,38 @@ footer { visibility: hidden; }
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 18px 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 20px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   height: 100%;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+.metric-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.metric-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 14px 14px 0 0;
+}
+.metric-accent.indigo { background: var(--indigo); }
+.metric-accent.red { background: var(--red); }
+.metric-accent.teal { background: var(--teal); }
+.metric-accent.amber { background: var(--amber); }
 .metric-label {
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
 }
 .metric-value {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 800;
   color: var(--navy);
   margin-bottom: 4px;
@@ -114,16 +228,17 @@ footer { visibility: hidden; }
   font-weight: 700;
   color: var(--green);
 }
+.metric-delta.indigo { color: var(--indigo); }
 .metric-delta.red { color: var(--red); }
 .metric-delta.amber { color: var(--amber); }
-.metric-delta.navy { color: var(--navy); }
+.metric-delta.teal { color: var(--teal); }
 
 /* ---------- Section headings ---------- */
 .section-title {
   font-size: 20px;
   font-weight: 800;
   color: var(--navy);
-  margin: 4px 0 2px 0;
+  margin: 24px 0 4px 0;
   letter-spacing: -0.3px;
 }
 .section-subtitle {
@@ -138,10 +253,10 @@ footer { visibility: hidden; }
   border: 1px solid var(--amber);
   border-left: 4px solid var(--amber);
   border-radius: 8px;
-  padding: 10px 14px;
+  padding: 12px 16px;
   font-size: 12.5px;
   color: #5a441b;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 .disclosure b { color: #7a5c12; }
 
@@ -187,7 +302,7 @@ table.attention td {
   color: var(--navy);
 }
 table.attention tr:last-child td { border-bottom: none; }
-table.attention tr:hover td { background: #f7f5ec; }
+table.attention tr:hover td { background: var(--ivory-soft); }
 
 /* ---------- Filter controls ---------- */
 .filter-row {
@@ -206,9 +321,101 @@ div.stButton > button {
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--navy);
+  transition: all 0.15s ease;
+}
+div.stButton > button:hover {
+  border-color: var(--indigo);
+  color: var(--indigo);
 }
 div.stButton > button[kind="primary"] {
-  background: var(--indigo);
-  border-color: var(--indigo);
+  background: var(--navy);
+  border-color: var(--navy);
   color: #ffffff;
 }
+div.stButton > button[kind="primary"]:hover {
+  background: var(--navy-light);
+  border-color: var(--navy-light);
+}
+.stSelectbox > div > div, .stTextInput > div > div, .stNumberInput > div > div {
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* ---------- Top Bar ---------- */
+/* Targets the keyed container created in app.py (st.container(key="top_bar")),
+   which Streamlit exposes as the "st-key-top_bar" CSS class. */
+.st-key-top_bar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.top-bar-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* ---------- User Profile (sidebar bottom) ---------- */
+.profile-divider {
+  height: 1px;
+  background: var(--navy-soft);
+  margin: 24px 16px 12px 16px;
+  border: none;
+  opacity: 0.3;
+}
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--navy-light);
+  border-radius: 10px;
+  margin: 0 12px 16px 12px;
+}
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--navy-soft);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+.profile-info {
+  flex: 1;
+}
+.profile-name {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #ffffff;
+}
+.profile-role {
+  font-size: 11px;
+  color: var(--ivory);
+  opacity: 0.8;
+}
+.profile-logout {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+.profile-logout:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- Search input styling ---------- */
+div.stTextInput > div > div > input {
+  font-size: 13px;
+}
+

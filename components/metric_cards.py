@@ -27,7 +27,8 @@ def render_metric_cards(metrics=None, db_path=None) -> None:
             "label": "Products Tracked",
             "value": str(metrics["total_products"]),
             "delta": "\u2014",
-            "delta_kind": "navy",
+            "delta_kind": "indigo",
+            "accent": "indigo",
             "help": "Total products in the local inventory database.",
         },
         {
@@ -35,6 +36,7 @@ def render_metric_cards(metrics=None, db_path=None) -> None:
             "value": str(metrics["high_risk_products"]),
             "delta": "\u2014",
             "delta_kind": "red",
+            "accent": "red",
             "help": "Products with High Risk expiry status (expiring soon). "
             "Not a prediction of unsold stock.",
         },
@@ -42,7 +44,8 @@ def render_metric_cards(metrics=None, db_path=None) -> None:
             "label": "Total Units in Stock",
             "value": str(metrics["total_units"]),
             "delta": "\u2014",
-            "delta_kind": "navy",
+            "delta_kind": "teal",
+            "accent": "teal",
             "help": "Sum of quantities across all tracked products.",
         },
         {
@@ -50,6 +53,7 @@ def render_metric_cards(metrics=None, db_path=None) -> None:
             "value": _format_inr(metrics["cost_exposure"]),
             "delta": "\u2014",
             "delta_kind": "amber",
+            "accent": "amber",
             "help": "Current value (qty x unit cost) of high-expiry-risk stock. "
             "Expiry status alone does not establish stock will remain unsold.",
         },
@@ -61,6 +65,7 @@ def render_metric_cards(metrics=None, db_path=None) -> None:
             st.markdown(
                 f"""
                 <div class="metric-card">
+                  <div class="metric-accent {metric['accent']}"></div>
                   <div class="metric-label">{metric["label"]}</div>
                   <div class="metric-value">{metric["value"]}</div>
                   <div class="metric-delta {metric['delta_kind']}">{metric['delta']}</div>

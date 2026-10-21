@@ -1,4 +1,5 @@
 import importlib.util
+from html import escape
 from pathlib import Path
 
 import streamlit as st
@@ -11,7 +12,7 @@ from components.charts import (
     render_sample_products_table,
 )
 from database.db import init_database
-from services.inventory_service import get_inventory_metrics
+from services.inventory_service import get_inventory_metrics, list_products
 
 st.set_page_config(
     page_title="StockWise AI \u2014 Inventory Overview",
@@ -20,7 +21,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-PAGES_DIR = Path(__file__).parent / "pages"
+PAGES_DIR = Path(__file__).parent / "page_modules"
 
 PAGE_FILES = {
     "inventory": "1_Inventory.py",
@@ -39,7 +40,7 @@ def load_css() -> None:
 
 
 def load_page_module(page_key: str):
-    """Dynamically load a page module from the pages/ directory."""
+    """Dynamically load a page module from the page_modules/ directory."""
     file_name = PAGE_FILES.get(page_key)
     if not file_name:
         return None
@@ -50,6 +51,70 @@ def load_page_module(page_key: str):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def render_search_results(query: str) -> None:
+    """Render live search results read from the real inventory database.
+
+    Uses actual records from the local SQLite database via the inventory
+    service. No sample or illustrative data is used.
+    """
+    products = list_products(search=query)
+
+    st.markdown('<div class="section-title">Search Results</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-subtitle">'
+        f'{len(products)} inventory record(s) matching "{escape(query)}".'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+
+    if not products:
+        st.info(f'No products match "{query}". Search by SKU or product name.')
+        return
+
+    badge_map = {
+        "High Risk": "risk-high",
+        "Expired": "risk-high",
+        "Medium Risk": "risk-medium",
+        "Low Risk": "risk-low",
+    }
+
+    rows = ""
+    for product in products:
+        badge_cls = badge_map.get(product.expiry_status, "risk-low")
+        rows += (
+            "<tr>"
+            f"<td>{escape(product.sku)}</td>"
+            f"<td>{escape(product.name)}</td>"
+            f"<td>{escape(product.category)}</td>"
+            f"<td>{product.quantity}</td>"
+            f"<td>{escape(product.expiry_date)}</td>"
+            f"<td><span class='risk-badge {badge_cls}'>"
+            f"{escape(product.expiry_status)}</span></td>"
+            "</tr>"
+        )
+
+    st.markdown(
+        f"""
+        <table class="attention">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Quantity</th>
+              <th>Expiry Date</th>
+              <th>Expiry Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
+        </table>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def render_overview() -> None:
@@ -71,6 +136,25 @@ def render_overview() -> None:
         """,
         unsafe_allow_html=True,
     )
+
+    # Top bar: live search across real inventory records
+    with st.container(key="top_bar"):
+        top_col1, top_col2 = st.columns([3, 1], gap="medium", vertical_alignment="center")
+        with top_col1:
+            query = st.text_input(
+                "Search inventory",
+                placeholder="Search SKU or product name...",
+                label_visibility="collapsed",
+                key="top_search",
+            )
+        with top_col2:
+            st.markdown(
+                '<div class="top-bar-hint">Searches real inventory records</div>',
+                unsafe_allow_html=True,
+            )
+
+    if query:
+        render_search_results(query)
 
     metrics = get_inventory_metrics()
     render_metric_cards(metrics=metrics)

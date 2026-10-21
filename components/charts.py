@@ -22,7 +22,7 @@ def render_sales_forecast_chart() -> None:
             y=actual,
             name="Actual Sales",
             mode="lines+markers",
-            line=dict(color="#1f2a44", width=3),
+            line=dict(color="#203850", width=3),
             marker=dict(size=7, symbol="circle"),
         )
     )
@@ -38,7 +38,12 @@ def render_sales_forecast_chart() -> None:
     )
 
     fig.update_layout(
-        title=dict(text="Monthly Sales vs Illustrative Forecast", x=0.02, xanchor="left", font=dict(size=15, color="#1f2a44")),
+        title=dict(
+            text="Monthly Sales vs Illustrative Forecast",
+            x=0.02,
+            xanchor="left",
+            font=dict(size=15, color="#203850", family="Inter, system-ui, -apple-system, sans-serif"),
+        ),
         xaxis_title="Month",
         yaxis_title="Units Sold",
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
@@ -46,11 +51,12 @@ def render_sales_forecast_chart() -> None:
         paper_bgcolor="rgba(0,0,0,0)",
         margin=dict(l=60, r=20, t=60, b=50),
         height=360,
+        font=dict(family="Inter, system-ui, -apple-system, sans-serif", color="#203850", size=12),
     )
-    fig.update_xaxes(showgrid=True, gridcolor="#efeae0", linecolor="#e3e0d8")
-    fig.update_yaxes(showgrid=True, gridcolor="#efeae0", linecolor="#e3e0d8", tickformat=",d")
+    fig.update_xaxes(showgrid=True, gridcolor="#d9d4c2", linecolor="#c9c2b0", tickformat=",d")
+    fig.update_yaxes(showgrid=True, gridcolor="#d9d4c2", linecolor="#c9c2b0", tickformat=",d")
 
-    st.plotly_chart(fig, use_container_width=True, key="sales_forecast_chart")
+    st.plotly_chart(fig, width="stretch", key="sales_forecast_chart")
 
 
 def render_expiry_risk_chart() -> None:
@@ -80,7 +86,7 @@ def render_expiry_risk_chart() -> None:
             text="Illustrative Product Risk Distribution",
             x=0.02,
             xanchor="left",
-            font=dict(size=15, color="#1f2a44"),
+            font=dict(size=15, color="#203850", family="Inter, system-ui, -apple-system, sans-serif"),
         ),
         legend=dict(orientation="h", yanchor="bottom", y=-0.12, xanchor="center", x=0.5),
         plot_bgcolor="rgba(0,0,0,0)",
@@ -88,9 +94,10 @@ def render_expiry_risk_chart() -> None:
         margin=dict(l=20, r=20, t=50, b=40),
         height=360,
         showlegend=True,
+        font=dict(family="Inter, system-ui, -apple-system, sans-serif", color="#203850", size=12),
     )
 
-    st.plotly_chart(fig, use_container_width=True, key="expiry_risk_chart")
+    st.plotly_chart(fig, width="stretch", key="expiry_risk_chart")
 
 
 def render_sample_products_table() -> None:
@@ -109,7 +116,11 @@ def render_sample_products_table() -> None:
 
     col_search, col_filter = st.columns([3, 2])
     with col_search:
-        search = st.text_input("Search products", placeholder="Filter by product name...")
+        search = st.text_input(
+            "Filter sample products",
+            placeholder="Filter by product name...",
+            key="sample_products_search",
+        )
     with col_filter:
         risk_options = ["All"] + sorted(df["Risk Level"].unique().tolist())
         risk_filter = st.selectbox("Filter by risk", risk_options, index=0)

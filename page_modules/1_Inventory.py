@@ -226,7 +226,7 @@ def render_view_products() -> None:
     styled = df.style.map(_status_color, subset=["Expiry Status"])
     st.dataframe(
         styled,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -402,12 +402,12 @@ def render_csv_import() -> None:
             for r in invalid
         ]
         st.dataframe(
-            pd.DataFrame(invalid_data), use_container_width=True, hide_index=True
+            pd.DataFrame(invalid_data), width="stretch", hide_index=True
         )
 
     if valid:
         st.success(f"{len(valid)} row(s) are ready to import.")
-        st.dataframe(pd.DataFrame(valid), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(valid), width="stretch", hide_index=True)
         if st.button("Import Valid Rows", type="primary", key="inv_import_btn"):
             try:
                 imported, rejected = import_products_from_rows(valid)
@@ -428,7 +428,7 @@ def render_csv_import() -> None:
                 "already exists in the database (or within the import batch)."
             )
             st.dataframe(
-                pd.DataFrame(result["rejected"]), use_container_width=True, hide_index=True
+                pd.DataFrame(result["rejected"]), width="stretch", hide_index=True
             )
         st.caption(
             "Import behavior: valid rows are inserted in a single database transaction. "
