@@ -1,39 +1,60 @@
+"""Dashboard metric cards backed by the local SQLite inventory database.
+
+Values are real database records, never sample or illustrative data.
+"""
+
+from __future__ import annotations
+
 import streamlit as st
 
-METRICS = [
-    {
-        "label": "Products Tracked",
-        "value": "250",
-        "delta": "0",
-        "delta_kind": "navy",
-        "help": "Illustrative sample value for UI testing only.",
-    },
-    {
-        "label": "High-Risk Products",
-        "value": "12",
-        "delta": "0",
-        "delta_kind": "red",
-        "help": "Illustrative sample value for UI testing only.",
-    },
-    {
-        "label": "Potentially Unsold Units",
-        "value": "340",
-        "delta": "0",
-        "delta_kind": "amber",
-        "help": "Illustrative sample value for UI testing only.",
-    },
-    {
-        "label": "Potential Cost Exposure",
-        "value": "\u20B98,500",
-        "delta": "0",
-        "delta_kind": "navy",
-        "help": "Illustrative sample value for UI testing only.",
-    },
-]
+from services.inventory_service import get_inventory_metrics
 
 
-def render_metric_cards() -> None:
-    """Render the four illustrative metric cards on the dashboard."""
+def _format_inr(value) -> str:
+    try:
+        return f"\u20B9{float(value):,.2f}"
+    except (TypeError, ValueError):
+        return "\u20B90.00"
+
+
+def render_metric_cards(metrics=None, db_path=None) -> None:
+    """Render the four metric cards using real inventory database values."""
+    if metrics is None:
+        metrics = get_inventory_metrics(db_path=db_path)
+
+    METRICS = [
+        {
+            "label": "Products Tracked",
+            "value": str(metrics["total_products"]),
+            "delta": "\u2014",
+            "delta_kind": "navy",
+            "help": "Total products in the local inventory database.",
+        },
+        {
+            "label": "High-Risk Products",
+            "value": str(metrics["high_risk_products"]),
+            "delta": "\u2014",
+            "delta_kind": "red",
+            "help": "Products with High Risk expiry status (expiring soon). "
+            "Not a prediction of unsold stock.",
+        },
+        {
+            "label": "Total Units in Stock",
+            "value": str(metrics["total_units"]),
+            "delta": "\u2014",
+            "delta_kind": "navy",
+            "help": "Sum of quantities across all tracked products.",
+        },
+        {
+            "label": "Potential Cost Exposure",
+            "value": _format_inr(metrics["cost_exposure"]),
+            "delta": "\u2014",
+            "delta_kind": "amber",
+            "help": "Current value (qty x unit cost) of high-expiry-risk stock. "
+            "Expiry status alone does not establish stock will remain unsold.",
+        },
+    ]
+
     cols = st.columns(len(METRICS), gap="medium")
     for col, metric in zip(cols, METRICS):
         with col:
