@@ -10,6 +10,8 @@ from components.charts import (
     render_expiry_risk_chart,
     render_sample_products_table,
 )
+from database.db import init_database
+from services.inventory_service import get_inventory_metrics
 
 st.set_page_config(
     page_title="StockWise AI \u2014 Inventory Overview",
@@ -70,7 +72,14 @@ def render_overview() -> None:
         unsafe_allow_html=True,
     )
 
-    render_metric_cards()
+    metrics = get_inventory_metrics()
+    render_metric_cards(metrics=metrics)
+
+    if metrics["total_products"] == 0:
+        st.info(
+            "Your inventory is empty. Go to the **Inventory** page to add products, "
+            "then return here to see live dashboard metrics."
+        )
 
     st.markdown('<div class="section-title">Sales vs Forecast</div>', unsafe_allow_html=True)
     st.markdown(
@@ -95,6 +104,7 @@ def render_overview() -> None:
 
 def main() -> None:
     load_css()
+    init_database()
     selection_key = render_sidebar()
 
     if selection_key == "overview":

@@ -24,7 +24,7 @@ All data shown in Phase 1 is illustrative sample data for UI testing only.
 - Pandas, NumPy
 - Plotly
 - Scikit-learn (reserved for future ML phases)
-- SQLite (reserved for future persistence phases)
+- SQLite (local persistence, Phase 2)
 
 No paid APIs, API keys, cloud services, or external AI services are used. The app runs locally and offline after installation.
 
@@ -68,6 +68,20 @@ StockWise-AI/
 ```
 
 Only Phase 1 files are implemented; remaining directories are reserved for later phases.
+
+## Phase 2 — Inventory Management & SQLite
+
+This phase adds a persistent local inventory management system on top of the Phase 1 dashboard.
+
+- **Local SQLite database** under `database/` (`stockwise.db`), created automatically on startup via `database/db.py` and `database/schema.sql`. Existing databases are never overwritten.
+- **Inventory CRUD**: add, view, edit, and delete products through `pages/1_Inventory.py`, with all SQL kept in `services/inventory_service.py`.
+- **Validation**: SKU uniqueness, non-negative quantity/unit cost, required fields, and ISO `YYYY-MM-DD` expiry dates (`utils/validators.py`).
+- **Search & filters**: search by SKU/name, filter by category and expiry status, "expiring soon" filter, sorting by name/SKU/category/quantity/unit cost/expiry date, and pagination.
+- **CSV import**: preview before import, row-level validation errors, duplicate-SKU detection within the file and against the database, transactional import, summary of imported vs. rejected rows.
+- **Dynamic dashboard metrics**: the Overview metric cards now read real values from SQLite (products tracked, high-risk products, total units in stock, potential cost exposure). Charts remain clearly labeled illustrative until a later phase.
+- **Automated tests** in `tests/` using a temporary database (never the real inventory database).
+
+All data stays local; no paid APIs, keys, or cloud services are used. `*.db`, `*.sqlite`, and `*.sqlite3` are gitignored.
 
 ## Security
 
