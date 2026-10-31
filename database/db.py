@@ -30,14 +30,44 @@ def get_connection(db_path=DEFAULT_DB_PATH):
     return conn
 
 
+import hashlib
+import shutil
+
+def _backup_if_exists(db_path: Path) -> None:
+    """Create a verified backup of an existing database before migration.
+
+    Idempotent: only creates a backup if one does not already exist, so repeated
+    startups do not overwrite the original backup.
+    """
+    if not db_path.exists():
+        return
+    backup_path = db_path.with_suffix(db_path.suffix + ".bak")
+    if backup_path.exists():
+        return
+    shutil.copy2(db_path, backup_path)
+    # Verify by comparing size and hash.
+    if db_path.stat().st_size != backup_path.stat().st_size:
+        raise RuntimeError("Database backup size mismatch.")
+    def _hash(p):
+        h = hashlib.sha256()
+        with open(p, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                h.update(chunk)
+        return h.hexdigest()
+    if _hash(db_path) != _hash(backup_path):
+        raise RuntimeError("Database backup hash mismatch.")
+
+
 def init_database(db_path=DEFAULT_DB_PATH):
     """Create the database and schema if they do not already exist.
 
     Safe to call on every application start: it only creates missing objects
-    and never deletes or overwrites existing data.
+    and never deletes or overwrites existing data. An existing database is
+    backed up (once) before schema migration is applied.
     """
     db_path = Path(db_path)
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    _backup_if_exists(db_path)
     conn = get_connection(db_path)
     try:
         with open(SCHEMA_PATH, encoding="utf-8") as f:

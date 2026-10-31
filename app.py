@@ -12,6 +12,7 @@ from components.charts import (
     render_sample_products_table,
 )
 from database.db import init_database
+from services.expiry_service import prioritize_products, stock_cost_value
 from services.inventory_service import get_inventory_metrics, list_products
 
 st.set_page_config(
@@ -179,10 +180,47 @@ def render_overview() -> None:
 
     st.markdown('<div class="section-title">Needs Attention</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="section-subtitle">Sample products that may require action based on illustrative expiry data.</div>',
+        '<div class="section-subtitle">Real inventory records prioritized by expiry risk. '
+        'Cost values are cost exposure, not confirmed losses.</div>',
         unsafe_allow_html=True,
     )
-    render_sample_products_table()
+
+    prioritized = prioritize_products(list_products())[:10]
+    if not prioritized:
+        st.info("No inventory records yet. Add products on the Inventory page.")
+    else:
+        rows = ""
+        for p in prioritized:
+            badge_cls = {
+                "Expired": "risk-high", "High Risk": "risk-high",
+                "Medium Risk": "risk-medium", "Low Risk": "risk-low",
+            }.get(p.expiry_status, "risk-low")
+            rows += (
+                "<tr>"
+                f"<td>{escape(p.name)}</td>"
+                f"<td>{p.quantity}</td>"
+                f"<td>{escape(p.expiry_date)} ({p.days_until_expiry} days)</td>"
+                f"<td><span class='risk-badge {badge_cls}'>{escape(p.expiry_status)}</span></td>"
+                f"<td>\u20B9{stock_cost_value(p):,.2f}</td>"
+                "</tr>"
+            )
+        st.markdown(
+            f"""
+            <table class="attention">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Stock Quantity</th>
+                  <th>Expiry / Days Remaining</th>
+                  <th>Risk Level</th>
+                  <th>Stock Cost Value</th>
+                </tr>
+              </thead>
+              <tbody>{rows}</tbody>
+            </table>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 def main() -> None:

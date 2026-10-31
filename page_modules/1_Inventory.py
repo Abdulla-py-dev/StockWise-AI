@@ -56,6 +56,7 @@ def _init_state() -> None:
         "inv_page_size": 25,
         "inv_add_success": None,
         "inv_add_error": None,
+        "inv_add_reset_pending": False,
         "inv_import_preview": None,
         "inv_import_result": None,
     }
@@ -72,24 +73,30 @@ def render_add_product() -> None:
     st.subheader("Add Product")
     st.caption("Add a new product to the local inventory database.")
 
-    if st.session_state.inv_add_success:
+    # Handle deferred reset (must occur before widgets are instantiated).
+    if st.session_state.get("inv_add_reset_pending"):
+        for k in ("inv_add_sku", "inv_add_name", "inv_add_category", "inv_add_qty", "inv_add_cost", "inv_add_expiry"):
+            st.session_state.pop(k, None)
+        st.session_state.inv_add_reset_pending = False
+
+    if st.session_state.get("inv_add_success"):
         st.success(st.session_state.inv_add_success)
         st.session_state.inv_add_success = None
-    if st.session_state.inv_add_error:
+    if st.session_state.get("inv_add_error"):
         st.error(st.session_state.inv_add_error)
         st.session_state.inv_add_error = None
 
     # st.form ensures submission only happens on explicit button click,
     # which prevents accidental duplicate submissions.
     with st.form("add_product_form", clear_on_submit=False):
-        sku = st.text_input("SKU", placeholder="e.g. MILK-001")
-        name = st.text_input("Product name", placeholder="e.g. Toned Milk")
-        category = st.text_input("Category", placeholder="e.g. Dairy")
-        quantity = st.number_input("Quantity", min_value=0, step=1, value=0)
+        sku = st.text_input("SKU", placeholder="e.g. MILK-001", key="inv_add_sku")
+        name = st.text_input("Product name", placeholder="e.g. Toned Milk", key="inv_add_name")
+        category = st.text_input("Category", placeholder="e.g. Dairy", key="inv_add_category")
+        quantity = st.number_input("Quantity", min_value=0, step=1, value=0, key="inv_add_qty")
         unit_cost = st.number_input(
-            "Unit cost (INR)", min_value=0.0, step=0.01, format="%.2f", value=0.0
+            "Unit cost (INR)", min_value=0.0, step=0.01, format="%.2f", value=0.0, key="inv_add_cost"
         )
-        expiry_date = st.date_input("Expiry date", value=None)
+        expiry_date = st.date_input("Expiry date", value=None, key="inv_add_expiry")
         submitted = st.form_submit_button("Add Product", type="primary")
 
     if submitted:
@@ -107,6 +114,8 @@ def render_add_product() -> None:
                 expiry_date=expiry_date.isoformat(),
             )
             st.session_state.inv_add_success = f"Product '{name}' added successfully."
+            # Defer form reset to next run (cannot mutate widget keys after instantiation).
+            st.session_state.inv_add_reset_pending = True
             st.rerun()
         except ValidationError as exc:
             st.session_state.inv_add_error = str(exc)
@@ -445,7 +454,8 @@ def render_csv_import() -> None:
 def render() -> None:
     _init_state()
     tabs = st.tabs(
-        ["Add Product", "View Products", "Edit Product", "Delete Product", "Import CSV"]
+        ["Add Product", "View Products", "Edit Product", "Delete Product", "Import CSV"],
+        key="inventory_tabs",
     )
     with tabs[0]:
         render_add_product()
