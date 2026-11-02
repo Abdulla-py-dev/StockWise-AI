@@ -29,6 +29,7 @@ def _init_state():
         "sale_cart": [],
         "sale_success": None,
         "sale_error": None,
+        "sale_last_product_id": None,
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -66,13 +67,23 @@ def render() -> None:
         selected_label = st.selectbox("Select product", list(options.keys()), key="sale_prod_select")
         selected = options[selected_label]
 
+        # Sync price when product changes, but preserve manual edits for same product
+        if st.session_state.get("sale_last_product_id") != selected.id:
+            default_price = round(float(selected.unit_cost), 2)
+            st.session_state["sale_price"] = default_price
+            st.session_state["sale_last_product_id"] = selected.id
+
         col_qty, col_price = st.columns(2)
         with col_qty:
             qty = st.number_input("Quantity", min_value=1, step=1, value=1, key="sale_qty")
         with col_price:
-            default_price = round(selected.unit_cost, 2)  # heuristic default; editable
-            price = st.number_input("Unit selling price (INR)", min_value=0.0, step=0.01,
-                                    value=float(default_price), format="%.2f", key="sale_price")
+            price = st.number_input(
+                "Unit selling price (INR)",
+                min_value=0.0,
+                step=0.01,
+                format="%.2f",
+                key="sale_price",
+            )
 
         if st.button("Add to Cart", key="sale_add_cart"):
             st.session_state.sale_cart.append({

@@ -50,6 +50,7 @@ STATUS_BADGE_CLASS = {
 def _init_state() -> None:
     defaults = {
         "inv_edit_id": None,
+        "inv_edit_last_id": None,
         "inv_delete_id": None,
         "inv_delete_confirmed": False,
         "inv_page": 1,
@@ -262,6 +263,7 @@ def render_view_products() -> None:
 # Edit product
 # ---------------------------------------------------------------------------
 
+
 def render_edit_product() -> None:
     st.subheader("Edit Product")
     products = list_products()
@@ -269,11 +271,24 @@ def render_edit_product() -> None:
         st.info("No products available to edit.")
         return
 
-    options = {f"{p.sku} \u2014 {p.name} ({p.category})": p.id for p in products}
+    options = {f"{p.sku} — {p.name} ({p.category})": p.id for p in products}
     selected_label = st.selectbox(
         "Select product to edit", options=list(options.keys()), key="inv_edit_select"
     )
     product_id = options[selected_label]
+
+    # Sync form state when selection changes
+    if st.session_state.get("inv_edit_last_id") != product_id:
+        product = get_product(product_id)
+        if product is not None:
+            st.session_state["inv_edit_sku"] = product.sku
+            st.session_state["inv_edit_name"] = product.name
+            st.session_state["inv_edit_category"] = product.category
+            st.session_state["inv_edit_quantity"] = int(product.quantity)
+            st.session_state["inv_edit_unit_cost"] = float(product.unit_cost)
+            st.session_state["inv_edit_expiry"] = date.fromisoformat(product.expiry_date)
+        st.session_state["inv_edit_last_id"] = product_id
+
     product = get_product(product_id)
 
     if product is None:
@@ -281,23 +296,21 @@ def render_edit_product() -> None:
         return
 
     with st.form("edit_product_form"):
-        sku = st.text_input("SKU", value=product.sku, key="inv_edit_sku")
-        name = st.text_input("Product name", value=product.name, key="inv_edit_name")
-        category = st.text_input("Category", value=product.category, key="inv_edit_category")
+        sku = st.text_input("SKU", key="inv_edit_sku")
+        name = st.text_input("Product name", key="inv_edit_name")
+        category = st.text_input("Category", key="inv_edit_category")
         quantity = st.number_input(
-            "Quantity", min_value=0, step=1, value=product.quantity, key="inv_edit_quantity"
+            "Quantity", min_value=0, step=1, key="inv_edit_quantity"
         )
         unit_cost = st.number_input(
             "Unit cost (INR)",
             min_value=0.0,
             step=0.01,
             format="%.2f",
-            value=float(product.unit_cost),
             key="inv_edit_unit_cost",
         )
         expiry_date = st.date_input(
             "Expiry date",
-            value=date.fromisoformat(product.expiry_date),
             key="inv_edit_expiry",
         )
         submitted = st.form_submit_button("Save Changes", type="primary")
