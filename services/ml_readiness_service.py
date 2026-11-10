@@ -76,8 +76,10 @@ def data_quality(db_path=None) -> dict:
             issues.append(f"{invalid_price} sale item(s) with invalid prices.")
         if dup_uuids:
             issues.append(f"{dup_uuids} duplicate transaction UUID(s).")
-        if missing_dates:
-            issues.append(f"{missing_dates} calendar day(s) in range with no sales.")
+        # A calendar day with zero recorded sales is a legitimate observation,
+        # not a data-quality defect. build_timeseries() zero-fills such days,
+        # so missing_calendar_days is reported for transparency only and does
+        # not affect quality_ok or ML eligibility.
 
         return {
             "transactions": int(txns),

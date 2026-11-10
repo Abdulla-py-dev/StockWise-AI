@@ -30,6 +30,7 @@ def _init_state():
         "sale_success": None,
         "sale_error": None,
         "sale_last_product_id": None,
+        "sale_price_by_product": {},
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -67,10 +68,16 @@ def render() -> None:
         selected_label = st.selectbox("Select product", list(options.keys()), key="sale_prod_select")
         selected = options[selected_label]
 
-        # Sync price when product changes, but preserve manual edits for same product
+        # Sync price when product changes: default to product's unit_cost from inventory
         if st.session_state.get("sale_last_product_id") != selected.id:
+            # Default to the product's actual unit_cost (not markup)
             default_price = round(float(selected.unit_cost), 2)
-            st.session_state["sale_price"] = default_price
+            # Use remembered price only if user manually changed it (differs from default)
+            remembered_price = st.session_state.sale_price_by_product.get(selected.id)
+            if remembered_price is not None and remembered_price != default_price:
+                st.session_state["sale_price"] = remembered_price
+            else:
+                st.session_state["sale_price"] = default_price
             st.session_state["sale_last_product_id"] = selected.id
 
         col_qty, col_price = st.columns(2)
@@ -84,6 +91,19 @@ def render() -> None:
                 format="%.2f",
                 key="sale_price",
             )
+
+            # Remember manual price only if it differs from the default (user explicitly changed it)
+            default_price = round(float(selected.unit_cost), 2)
+            current_price = st.session_state["sale_price"]
+            if current_price != default_price:
+                st.session_state.sale_price_by_product[selected.id] = current_price
+            elif selected.id in st.session_state.sale_price_by_product:
+                # Price reverted to default; remove stored manual price
+                del st.session_state.sale_price_by_product[selected.id]
+
+            # Dynamic line total display - directly below Unit Selling Price
+            line_total = qty * price
+            st.markdown(f"**Total Price: \u20B9{line_total:,.2f}**  \n*({qty} \u00d7 \u20B9{price:,.2f})*")
 
         if st.button("Add to Cart", key="sale_add_cart"):
             st.session_state.sale_cart.append({
